@@ -13,7 +13,7 @@ call .\.venv\Scripts\activate.bat
 
 echo [3/4] Install dependencies...
 python -m pip install -r requirements.txt
-python -m pip install -e .
+rem Editable install is optional; skip to avoid packaging issues on some Windows setups.
 
 echo [4/4] Initialize .env file...
 if not exist .env (
@@ -23,4 +23,4 @@ if not exist .env (
   echo Existing .env detected. Skipping.
 )
 
-echo Done. Run: python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
+echo Done. Run: set PYTHONPATH=%CD%\\src ^&^& python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
