@@ -55,6 +55,17 @@ python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
 
 > 建议使用 Python 3.10 / 3.11 / 3.12（3.13+ 在 Windows 上安装 pandas/numpy 可能需要编译器）。 
 
+### Windows 常见乱码/编码问题
+- **推荐使用 CMD 脚本**（避免 PowerShell 编码问题）：  
+  ```powershell
+  .\scripts\windows_setup.cmd
+  ```
+- 如需使用 PowerShell，建议先执行：  
+  ```powershell
+  chcp 65001
+  ```
+  并确保 `windows_setup.ps1` 为 **UTF-8 with BOM**。
+
 如果脚本执行被阻止，请先运行：
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned

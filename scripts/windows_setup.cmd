@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 > nul
 echo [1/4] Create virtual environment...
 python -c "import sys; v=sys.version_info; sys.exit(0 if (v.major==3 and v.minor in (10,11,12)) else 1)"
 if errorlevel 1 (
