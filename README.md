@@ -26,7 +26,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-PYTHONPATH=src uvicorn bot.web:app --host 0.0.0.0 --port 8080
+python -m uvicorn src.bot.web:app --host 0.0.0.0 --port 8080
 ```
 
 也可以直接运行 Linux/macOS 脚本：
@@ -48,8 +48,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 copy .env.example .env
-set PYTHONPATH=src
-python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
+python -m uvicorn src.bot.web:app --host 0.0.0.0 --port 8080
 ```
 
 > 建议使用 Python 3.10 / 3.11 / 3.12（3.13+ 在 Windows 上安装 pandas/numpy 可能需要编译器）。 
