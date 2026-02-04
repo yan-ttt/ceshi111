@@ -29,6 +29,27 @@ cp .env.example .env
 uvicorn bot.web:app --host 0.0.0.0 --port 8080
 ```
 
+## Windows PowerShell 快速开始
+> 你遇到的 `source`/`pip` 报错属于 Windows 环境差异，请用以下命令：
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+copy .env.example .env
+python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
+```
+
+如果脚本执行被阻止，请先运行：
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+也可以直接运行脚本：
+```powershell
+.\scripts\windows_setup.ps1
+```
+
 ## 使用说明（本地）
 1. 先配置 `.env`，填入 Gate.io API Key/Secret（仅本地保存，不要提交到仓库）。  
 2. 默认是 `paper` 模式（不真实下单）。需要真实下单时，将 `TRADING_MODE=live` 并设置 `ENABLE_AUTO_TRADE=true`。  
