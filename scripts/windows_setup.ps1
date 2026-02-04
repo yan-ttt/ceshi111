@@ -1,8 +1,8 @@
-Write-Host "[1/4] Create virtual environment..."
+﻿Write-Host "[1/4] Create virtual environment..."
 python -m venv .venv
 
 Write-Host "[2/4] Activate virtual environment..."
-$activate = ".\\.venv\\Scripts\\Activate.ps1"
+$activate = ".\.venv\Scripts\Activate.ps1"
 if (-Not (Test-Path $activate)) {
   Write-Host "Cannot find venv activation script. Please check that Python is installed."
   exit 1
