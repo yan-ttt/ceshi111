@@ -33,12 +33,15 @@ uvicorn bot.web:app --host 0.0.0.0 --port 8080
 > 你遇到的 `source`/`pip` 报错属于 Windows 环境差异，请用以下命令：
 
 ```powershell
+python --version
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 copy .env.example .env
 python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
 ```
+
+> 建议使用 Python 3.10 / 3.11 / 3.12（3.13+ 在 Windows 上安装 pandas/numpy 可能需要编译器）。 
 
 如果脚本执行被阻止，请先运行：
 ```powershell
