@@ -39,6 +39,8 @@ class Settings:
     retry_backoff_s: float
     save_interval: int
     min_interval_ms: int
+    training_device: str
+    training_epochs: int
 
 
 
@@ -81,4 +83,6 @@ def load_settings() -> Settings:
         retry_backoff_s=float(os.getenv("RETRY_BACKOFF_S", "0.5")),
         save_interval=int(os.getenv("SAVE_INTERVAL", "5")),
         min_interval_ms=int(os.getenv("MIN_INTERVAL_MS", "500")),
+        training_device=os.getenv("TRAINING_DEVICE", "auto"),
+        training_epochs=int(os.getenv("TRAINING_EPOCHS", "30")),
     )

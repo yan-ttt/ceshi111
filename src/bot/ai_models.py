@@ -214,6 +214,11 @@ class OnlineLinearModel(BaseModel):
         if "learning_rate" in payload:
             self.learning_rate = float(payload["learning_rate"])
 
+    def set_parameters(self, weights: List[float], bias: float) -> None:
+        if len(weights) == len(self.weights):
+            self.weights = np.array(weights, dtype=float)
+        self.bias = float(bias)
+
 
 class SequenceModel(BaseModel):
     name = "sequence"

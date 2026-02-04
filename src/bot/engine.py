@@ -6,12 +6,13 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 
-from bot.ai_models import ModelRegistry, Signal, WeightedEnsembleModel
+from bot.ai_models import ModelRegistry, OnlineLinearModel, Signal, WeightedEnsembleModel
 from bot.config import Settings
 from bot.gate_api import GateAPI, GateCredentials
 from bot.risk import RiskManager, RiskPlan, RiskSettings
 from bot.storage import ModelState, StateStore
 from bot.logging_utils import TradeLogger
+from bot.training import HybridTrainer, TrainingReport
 
 
 @dataclass
@@ -73,6 +74,8 @@ class TradingEngine:
         self._balances: Dict[str, float] = {}
         self._positions: Dict[str, Dict[str, float]] = {}
         self._last_cycle_ms: float = 0.0
+        self._last_training: TrainingReport | None = None
+        self.trainer = HybridTrainer(settings.training_device)
         self._load_state()
 
     @property
@@ -221,6 +224,27 @@ class TradingEngine:
         return {
             "last_cycle_ms": self._last_cycle_ms,
         }
+
+    def train_hybrid(self, symbol: str, epochs: int | None = None, device: str | None = None) -> TrainingReport:
+        candles = self.fetch_candles(symbol)
+        report = self.trainer.train(
+            candles,
+            epochs=epochs or self.settings.training_epochs,
+            prefer_device=device or self.settings.training_device,
+        )
+        model = self.registry._models.get("online_linear")
+        if isinstance(model, OnlineLinearModel):
+            model.set_parameters(
+                [report.weights["w1"], report.weights["w2"], report.weights["w3"], report.weights["w4"]],
+                report.weights["bias"],
+            )
+        self._last_training = report
+        return report
+
+    def last_training(self) -> Dict[str, object]:
+        if self._last_training is None:
+            return {}
+        return self._last_training.__dict__.copy()
 
     def _sync_state(self) -> None:
         if self._cycle_count % self.settings.save_interval != 0:
