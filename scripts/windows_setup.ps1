@@ -1,23 +1,23 @@
-Write-Host "[1/4] 创建虚拟环境..."
+Write-Host "[1/4] Create virtual environment..."
 python -m venv .venv
 
-Write-Host "[2/4] 激活虚拟环境..."
+Write-Host "[2/4] Activate virtual environment..."
 $activate = ".\\.venv\\Scripts\\Activate.ps1"
 if (-Not (Test-Path $activate)) {
-  Write-Host "找不到虚拟环境激活脚本，请确认 python 已正确安装。"
+  Write-Host "Cannot find venv activation script. Please check that Python is installed."
   exit 1
 }
 & $activate
 
-Write-Host "[3/4] 安装依赖..."
+Write-Host "[3/4] Install dependencies..."
 python -m pip install -r requirements.txt
 
-Write-Host "[4/4] 初始化 .env 文件..."
+Write-Host "[4/4] Initialize .env file..."
 if (-Not (Test-Path .env)) {
   Copy-Item .env.example .env
-  Write-Host "已生成 .env，请编辑并填入 API Key。"
+  Write-Host ".env created. Please edit and fill in API keys."
 } else {
-  Write-Host "检测到已存在 .env，跳过复制。"
+  Write-Host "Existing .env detected. Skipping."
 }
 
-Write-Host "完成。运行：python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080"
+Write-Host "Done. Run: python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080"
