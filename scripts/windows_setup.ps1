@@ -16,6 +16,7 @@ if (-Not (Test-Path $activate)) {
 
 Write-Host "[3/4] Install dependencies..."
 python -m pip install -r requirements.txt
+python -m pip install -e .
 
 Write-Host "[4/4] Initialize .env file..."
 if (-Not (Test-Path .env)) {
@@ -25,4 +26,4 @@ if (-Not (Test-Path .env)) {
   Write-Host "Existing .env detected. Skipping."
 }
 
-Write-Host "Done. Run: $env:PYTHONPATH=\"$(Get-Location)\\src\"; python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080"
+Write-Host "Done. Run: python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080"

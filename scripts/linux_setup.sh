@@ -23,6 +23,7 @@ fi
 
 echo "[4/4] Install dependencies..."
 python -m pip install -r requirements.txt
+python -m pip install -e .
 
 if [ ! -f .env ]; then
   cp .env.example .env

@@ -4,5 +4,4 @@ if not exist .\.venv\Scripts\activate.bat (
   exit /b 1
 )
 call .\.venv\Scripts\activate.bat
-set PYTHONPATH=%CD%\src
 python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
