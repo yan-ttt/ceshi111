@@ -21,4 +21,4 @@ if not exist .env (
   echo Existing .env detected. Skipping.
 )
 
-echo Done. Run: python -m uvicorn src.bot.web:app --host 0.0.0.0 --port 8080
+echo Done. Run: set PYTHONPATH=%CD%\\src ^&^& python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
