@@ -9,4 +9,4 @@ else
   exit 1
 fi
 
-python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
+PYTHONPATH=src python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080

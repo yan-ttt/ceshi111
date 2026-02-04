@@ -26,7 +26,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-uvicorn bot.web:app --host 0.0.0.0 --port 8080
+PYTHONPATH=src uvicorn bot.web:app --host 0.0.0.0 --port 8080
 ```
 
 也可以直接运行 Linux/macOS 脚本：
@@ -48,6 +48,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 copy .env.example .env
+set PYTHONPATH=src
 python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
 ```
 

@@ -25,4 +25,4 @@ if (-Not (Test-Path .env)) {
   Write-Host "Existing .env detected. Skipping."
 }
 
-Write-Host "Done. Run: python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080"
+Write-Host "Done. Run: $env:PYTHONPATH=src; python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080"
