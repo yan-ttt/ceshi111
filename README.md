@@ -34,6 +34,11 @@ uvicorn bot.web:app --host 0.0.0.0 --port 8080
 ./scripts/linux_setup.sh
 ```
 
+安装完成后可用脚本快速启动：
+```bash
+./scripts/run_server.sh
+```
+
 ## Windows PowerShell 快速开始
 > 你遇到的 `source`/`pip` 报错属于 Windows 环境差异，请用以下命令：
 
@@ -56,6 +61,11 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 也可以直接运行脚本（Windows 推荐 .cmd）：
 ```powershell
 .\scripts\windows_setup.cmd
+```
+
+安装完成后可用脚本快速启动：
+```powershell
+.\scripts\run_server.cmd
 ```
 
 如果要使用 PowerShell 脚本（.ps1），请确保脚本编码为 UTF-8 with BOM，或者直接使用上面的 .cmd：
