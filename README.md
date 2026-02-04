@@ -29,6 +29,11 @@ cp .env.example .env
 uvicorn bot.web:app --host 0.0.0.0 --port 8080
 ```
 
+也可以直接运行 Linux/macOS 脚本：
+```bash
+./scripts/linux_setup.sh
+```
+
 ## Windows PowerShell 快速开始
 > 你遇到的 `source`/`pip` 报错属于 Windows 环境差异，请用以下命令：
 
