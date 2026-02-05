@@ -23,9 +23,11 @@ class HybridTrainer:
     def __init__(self, prefer_device: str = "auto") -> None:
         self.prefer_device = prefer_device
 
+    # 检查是否安装了 torch（用于 GPU/CPU 训练后端）
     def _torch_available(self) -> bool:
         return importlib.util.find_spec("torch") is not None
 
+    # 根据偏好选择设备：优先 GPU，其次 CPU
     def _resolve_device(self, prefer: str) -> str:
         if not self._torch_available():
             return "cpu"
@@ -39,6 +41,7 @@ class HybridTrainer:
             return "cuda"
         return "cpu"
 
+    # 构建训练数据集（特征 + 下一根K线收益率作为目标）
     def _build_dataset(self, candles: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         close = candles["close"].astype(float)
         returns = close.pct_change().fillna(0.0)
@@ -65,6 +68,7 @@ class HybridTrainer:
             target_values = target_values[:-1]
         return features.astype(float), target_values.astype(float)
 
+    # 执行混合训练：CPU 预处理 + torch 或 numpy 后端
     def train(
         self,
         candles: pd.DataFrame,

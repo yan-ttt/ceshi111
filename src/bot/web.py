@@ -102,7 +102,7 @@ async def ui() -> str:
             <div><span>机器人延迟</span><strong id="statLatency">--</strong></div>
           </div>
           <div>
-            <div class="pill live" id="liveStatus">实时: 未知</div>
+            <div class="pill live" id="liveStatus">实盘: 未知</div>
             <div class="pill paper" id="paperStatus">模拟: 未知</div>
           </div>
         </div>
@@ -111,10 +111,10 @@ async def ui() -> str:
           <div class="card chart-card">
             <div class="toolbar">
               <div class="group">
-                <button class="secondary" onclick="setIntervalLabel('1m')">1分</button>
-                <button class="secondary" onclick="setIntervalLabel('15m')">15分</button>
-                <button class="secondary" onclick="setIntervalLabel('1h')">1小时</button>
-                <button class="secondary" onclick="setIntervalLabel('4h')">4小时</button>
+                <button class="secondary" onclick="setIntervalLabel('1分钟')">1分</button>
+                <button class="secondary" onclick="setIntervalLabel('15分钟')">15分</button>
+                <button class="secondary" onclick="setIntervalLabel('1小时')">1小时</button>
+                <button class="secondary" onclick="setIntervalLabel('4小时')">4小时</button>
               </div>
               <div class="group">
                 <button onclick="loadCandles()">刷新K线</button>
@@ -179,7 +179,7 @@ async def ui() -> str:
               <div class="group">
                 <label>设备：</label>
                 <select id="trainDevice">
-                  <option value="auto">自动</option>
+                  <option value="auto">自动选择</option>
                   <option value="cpu">CPU</option>
                   <option value="cuda">GPU</option>
                 </select>
@@ -193,14 +193,21 @@ async def ui() -> str:
         </div>
       </div>
       <script>
+        // 通用接口请求封装（返回格式化 JSON）
         async function api(path, options) {
           const res = await fetch(path, options);
           const data = await res.json();
           return JSON.stringify(data, null, 2);
         }
+        // 加载基础状态与交易对列表
+        function formatMode(mode) {
+          if (mode === 'paper') return '模拟';
+          if (mode === 'live') return '实盘';
+          return mode || '未知';
+        }
         async function loadStatus() {
           const data = await fetch('/status').then(r => r.json());
-          document.getElementById('liveStatus').textContent = `实时: ${data.mode}`;
+          document.getElementById('liveStatus').textContent = `实盘: ${formatMode(data.mode)}`;
           document.getElementById('paperStatus').textContent = data.paper_trade ? '模拟: 开启' : '模拟: 关闭';
           const select = document.getElementById('symbolSelect');
           if (select.options.length === 0) {
@@ -215,7 +222,7 @@ async def ui() -> str:
           const statusList = document.getElementById('statusList');
           statusList.innerHTML = '';
           const items = [
-            ['交易模式', data.mode],
+            ['交易模式', formatMode(data.mode)],
             ['自动交易', data.auto_trade ? '开启' : '关闭'],
             ['风险等级', data.risk],
           ];
@@ -225,6 +232,7 @@ async def ui() -> str:
             statusList.appendChild(li);
           });
         }
+        // 信号、模型、余额、持仓与执行接口
         async function loadSignals() { document.getElementById('signals').textContent = await api('/signals'); }
         async function loadModels() { document.getElementById('models').textContent = await api('/models'); }
         async function loadBalances() { document.getElementById('balances').textContent = await api('/balances'); }
@@ -240,6 +248,7 @@ async def ui() -> str:
             list.appendChild(li);
           });
         }
+        // 拉取K线并刷新顶部统计
         async function loadCandles() {
           const symbol = document.getElementById('symbolSelect').value;
           const data = await fetch(`/candles?symbol=${encodeURIComponent(symbol)}`).then(r => r.json());
@@ -248,10 +257,12 @@ async def ui() -> str:
           updateHeaderStats(candles);
           await loadSignals();
         }
+        // 读取后端延迟等指标
         async function loadMetrics() {
           const data = await fetch('/metrics').then(r => r.json());
-          document.getElementById('statLatency').textContent = `${(data.last_cycle_ms || 0).toFixed(0)} ms`;
+          document.getElementById('statLatency').textContent = `${(data.last_cycle_ms || 0).toFixed(0)} 毫秒`;
         }
+        // 订单查询
         async function querySpotOrder() {
           const id = document.getElementById('spotOrderId').value;
           const symbol = document.getElementById('spotSymbol').value;
@@ -263,15 +274,18 @@ async def ui() -> str:
           if (!id) return;
           document.getElementById('orders').textContent = await api(`/orders/futures/${id}`);
         }
+        // 自动交易开关
         async function toggleAutoTrade(enable) {
           const path = enable ? '/auto-trade/enable' : '/auto-trade/disable';
           document.getElementById('signals').textContent = await api(path, { method: 'POST' });
           await loadStatus();
         }
+        // UI显示的周期标签（不改变后端周期）
         function setIntervalLabel(label) {
           const title = document.getElementById('symbolTitle');
           title.textContent = `${document.getElementById('symbolSelect').value} · ${label}`;
         }
+        // 标签页切换
         function switchTab(name) {
           document.querySelectorAll('.tabs button').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.tab === name);
@@ -280,6 +294,7 @@ async def ui() -> str:
             tab.classList.toggle('active', tab.id === `tab-${name}`);
           });
         }
+        // 顶部行情统计展示
         function updateHeaderStats(candles) {
           if (candles.length === 0) return;
           const last = candles[candles.length - 1];
@@ -296,6 +311,7 @@ async def ui() -> str:
           document.getElementById('statLow').textContent = low.toFixed(2);
           document.getElementById('statVolume').textContent = volume.toFixed(2);
         }
+        // 混合训练入口
         async function runTraining() {
           const symbol = document.getElementById('symbolSelect').value;
           const device = document.getElementById('trainDevice').value;
@@ -303,6 +319,7 @@ async def ui() -> str:
           const payload = await api(`/train?symbol=${encodeURIComponent(symbol)}&device=${device}&epochs=${epochs}`, { method: 'POST' });
           document.getElementById('training').textContent = payload;
         }
+        // 简易K线绘制
         function drawCandles(candles) {
           const svg = document.getElementById('kline');
           while (svg.firstChild) svg.removeChild(svg.firstChild);

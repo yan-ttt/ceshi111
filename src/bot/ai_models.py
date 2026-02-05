@@ -215,6 +215,7 @@ class OnlineLinearModel(BaseModel):
             self.learning_rate = float(payload["learning_rate"])
 
     def set_parameters(self, weights: List[float], bias: float) -> None:
+        # 允许外部训练器更新参数
         if len(weights) == len(self.weights):
             self.weights = np.array(weights, dtype=float)
         self.bias = float(bias)

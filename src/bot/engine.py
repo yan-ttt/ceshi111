@@ -75,6 +75,7 @@ class TradingEngine:
         self._positions: Dict[str, Dict[str, float]] = {}
         self._last_cycle_ms: float = 0.0
         self._last_training: TrainingReport | None = None
+        # 混合训练器（可用 GPU/CPU）
         self.trainer = HybridTrainer(settings.training_device)
         self._load_state()
 
@@ -225,6 +226,7 @@ class TradingEngine:
             "last_cycle_ms": self._last_cycle_ms,
         }
 
+    # 混合训练入口：训练后写回在线线性模型参数
     def train_hybrid(self, symbol: str, epochs: int | None = None, device: str | None = None) -> TrainingReport:
         candles = self.fetch_candles(symbol)
         report = self.trainer.train(

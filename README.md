@@ -29,6 +29,8 @@ cp .env.example .env
 PYTHONPATH="$(pwd)/src" python -m uvicorn bot.web:app --host 0.0.0.0 --port 8080
 ```
 
+详细的中英文使用说明请查看：[docs/USAGE.md](docs/USAGE.md)。
+
 也可以直接运行 Linux/macOS 脚本：
 ```bash
 ./scripts/linux_setup.sh
